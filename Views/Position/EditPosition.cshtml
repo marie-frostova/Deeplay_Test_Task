@@ -1,0 +1,7 @@
+﻿@model Deeplay_EnterprisePersonnelAccounting.Models.Position;
+<h2>Edit position</h2>
+<form asp-controller="Position" asp-action="AddOrUpdatePosition" method="get">
+    <input asp-for="Id" readonly hidden/>
+    <li><input type="text" placeholder="Enter position name" value="@Model.PositionName" name="PositionName"></li>
+    <button type="submit">Save</button><a href="/Position/ListPositions" class="btn">Cancel</a>
+</form>

@@ -1,0 +1,8 @@
+﻿@model Deeplay_EnterprisePersonnelAccounting.Models.Subdivision;
+
+<h2>Edit subdivision</h2>
+<form asp-controller="Subdivision" asp-action="AddOrUpdateSubdivision" method="get">
+    <input asp-for="Id" readonly hidden/>
+    <li><input type="text" placeholder="Enter subdivision name" value="@Model.SubdivisionName" name="SubdivisionName"></li>
+    <button type="submit">Save</button><a href="/Subdivision/ListSubdivisions" class="btn">Cancel</a>
+</form>

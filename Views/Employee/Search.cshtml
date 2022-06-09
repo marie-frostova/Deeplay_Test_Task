@@ -1,0 +1,89 @@
+﻿@using System.Text;
+@{
+    bool IsValid(SearchQuery query)
+    {
+        return true;
+    };
+}
+@model Deeplay_EnterprisePersonnelAccounting.Models.SearchQuery
+
+<div class="block" id="actions">
+    <h2>Actions</h2>
+    <a asp-controller="Employee" asp-action="EditEmployee" class="btn">Add employee</a>
+    <a asp-controller="Position" asp-action="ListPositions" class="btn">List and edit positions</a>
+    <a asp-controller="Subdivision" asp-action="ListSubdivisions" class="btn">List and edit subdivisions</a>
+</div>
+
+<div class="block" id="newSearch">
+    <h2>New search</h2>
+    <form asp-controller="Employee" asp-action="Search" method="get">
+        <ul>
+            <li><input type="text" placeholder="Enter employee surname" name="query.Surname"></li>
+            <li><input type="text" placeholder="Enter employee name" name="query.Name"></li>
+            <li><input type="text" placeholder="Enter employee patronymic" name="query.Patronymic"></li>
+            <li><input type="text" placeholder="Enter employee position" name="query.Position"></li>
+            <li><input type="text" placeholder="Enter employee subdivision" name="query.Subdivision"></li>
+            <li><button type="submit">Search</button></li>
+        </ul>
+    </form>
+</div>
+
+<div class="block" id="searchResults">
+@if(IsValid(Model))
+{
+    @if (Model.Result.Count == 0)
+    {
+        <h2>Not found</h2>
+    }
+    else
+    {
+        <h2>Search result</h2>
+        <span><em>@Model.Result.Count of @Model.ResultCount</em></span>
+        <ul>
+            @foreach (var res in Model.Result)
+            {
+                <a asp-controller="Employee" asp-action="Employee" asp-route-strId="@res.Id">
+                    <li>
+                        <span>@res.Surname @res.Name @res.Patronymic</span>
+                        @if (res.Position != null)
+                        {
+                            <span>| position: @res.Position.PositionName</span>
+                        }
+                        @if (res.Subdivision != null)
+                        {
+                            <span>| subdivision: @res.Subdivision.SubdivisionName</span>
+                        }
+                    </li>
+                </a>
+            }
+        </ul>
+        @if (Model.ResultCount > Model.ResultsPerPage)
+        {
+            <span>Pages:</span>
+            @for (var i = 0; i < (Model.ResultCount + Model.ResultsPerPage - 1) / Model.ResultsPerPage; ++i)
+            {
+                var i1 = i + 1;
+                if (i == Model.Page)
+                {
+                    @i1
+                }
+                else
+                {
+                    <a asp-controller="Employee" asp-action="Search"
+                    asp-route-query.Surname="@Model.Surname"
+                    asp-route-query.Name="@Model.Name"
+                    asp-route-query.Patronymic="@Model.Patronymic"
+                    asp-route-query.Position="@Model.Position"
+                    asp-route-query.Subdivision="@Model.Subdivision"
+                    asp-route-query.Page="@i"
+                    >@i1</a>
+                }
+            }
+        }
+    }
+}
+else
+{
+    <p>Invalid request. Try to enter name, surname, patronimic, position or subdivision.</p>
+}
+</div>

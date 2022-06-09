@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Position>
+<div>
+    <a href="/"><button>Back</button></a>
+    <a asp-controller="Position" asp-action="EditPosition"><button>Add new position</button></a>
+</div>
+<h2>Positions</h2>
+<ul>
+@foreach (var p in Model)
+{
+    <li>
+        <a asp-controller="Position" asp-action="EditPosition" asp-route-strId="@p.Id"><button>Edit</button></a>
+        <a asp-controller="Position" asp-action="DeletePosition" asp-route-strId="@p.Id" onclick="return confirm('Confirm?')"><button>Delete</button></a>
+        @p.PositionName
+    </li>
+}
+</ul>

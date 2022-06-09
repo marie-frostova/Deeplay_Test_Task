@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Subdivision>
+<div>
+    <a href="/"><button>Back</button></a>
+    <a asp-controller="Subdivision" asp-action="EditSubdivision"><button>Add new subdivision</button></a>
+</div>
+<h2>Subdivisions</h2>
+<ul>
+@foreach (var s in Model)
+{
+    <li>
+        <a asp-controller="Subdivision" asp-action="EditSubdivision" asp-route-strId="@s.Id"><button>Edit</button></a>
+        <a asp-controller="Subdivision" asp-action="DeleteSubdivision" asp-route-strId="@s.Id" onclick="return confirm('Confirm?')"><button>Delete</button></a>
+        @s.SubdivisionName
+    </li>
+}
+</ul>

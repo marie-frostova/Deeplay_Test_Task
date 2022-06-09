@@ -1,0 +1,47 @@
+﻿@model Deeplay_EnterprisePersonnelAccounting.Models.Employee
+
+@if (Model == null)
+{
+    <h2>No such employee</h2>
+}
+else
+{
+    <div class="block">
+        <a href="/"><button>Back</button></a>
+        <a asp-controller="Employee" asp-action="EditEmployee" asp-route-strId="@Model.Id"><button>Edit</button></a>
+        <a asp-controller="Employee" asp-action="DeleteEmployee" asp-route-strId="@Model.Id" onclick="return confirm('Confirm?')"><button>Delete</button></a>
+    </div>
+    <div class="block">
+        <h2>Employee</h2>
+        <ul>
+            <li><span class="caption">Name:</span> @Model.Surname @Model.Name @Model.Patronymic</li>
+            <li><span class="caption">Birth date:</span> @Model.BirthDate.ToString("yyyy.MM.dd")</li>
+            <li><span class="caption">Sex:</span> @Model.Sex.ToString()</li>
+            @if (Model.Position != null)
+            {
+                <li><span class="caption">Position:</span> @Model.Position.PositionName</li>
+            }
+            @if (Model.Subdivision != null)
+            {
+                <li><span class="caption">Subdivision:</span> @Model.Subdivision.SubdivisionName</li>
+            }
+            @if (Model.LineManager != null)
+            {
+                <li><span class="caption">Manager:</span> @Model.LineManager.Surname @Model.LineManager.Name @Model.LineManager.Patronymic</li>
+            }
+            @if (Model.Subordinates != null && Model.Subordinates.Count != 0)
+            {
+                <li><span class="caption">Subordinates:</span>
+                <ul class="list">
+                @foreach(var sub in Model.Subordinates)
+                {
+                    <a asp-controller="Employee" asp-action="Employee" asp-route-strId="@sub.Id">
+                    <li>@sub.Surname @sub.Name @sub.Patronymic</li>
+                    </a>
+                }
+                </ul>
+                </li>
+            }
+        </ul>
+    </div>
+}

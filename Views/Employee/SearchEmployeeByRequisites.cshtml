@@ -1,0 +1,14 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<Employee>
+<?xml version="1.0"?>
+<List>
+    @foreach(var empl in Model)
+    {
+        <Employee>
+            <FullName>@empl.Surname @empl.Name @empl.Patronymic</FullName>
+            <Id>@empl.Id</Id>
+        </Employee>
+    }
+</List>

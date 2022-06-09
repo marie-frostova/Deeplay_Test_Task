@@ -1,0 +1,113 @@
+﻿@model Deeplay_EnterprisePersonnelAccounting.Models.EmployeeEditModel
+@{
+    var now = DateTime.Now.ToString("yyyy'-'MM'-'dd");
+    var now_18 = DateTime.Now.AddYears(-18).ToString("yyyy'-'MM'-'dd");
+    var now_100 = DateTime.Now.AddYears(-100).ToString("yyyy'-'MM'-'dd");
+    var birthDateModel = Model.Employee.BirthDate.ToString("yyyy'-'MM'-'dd");
+    var birthDateValue = birthDateModel != "0001-01-01" ? birthDateModel : now_18;
+    var positions = Model.Positions;
+    var subdivisions = Model.Subdivisions;
+    var managerFullName = Model.Employee.LineManager != null ? Model.Employee.LineManager.Surname + " " + Model.Employee.LineManager.Name + " " + Model.Employee.LineManager.Patronymic : "";
+    var nullGuid = new Guid();
+}
+
+<h2>Edit employee</h2>
+<form asp-controller="Employee" asp-action="AddOrUpdateEmployee" method="get">
+    <input asp-for="Employee.Id" readonly hidden/>
+    <ul>
+        <li><input type="text" placeholder="Enter employee surname" value="@Model.Employee.Surname" name="Employee.Surname"></li>
+        <li><input type="text" placeholder="Enter employee name" value="@Model.Employee.Name" name="Employee.Name"></li>
+        <li><input type="text" placeholder="Enter employee patronymic" value="@Model.Employee.Patronymic" name="Employee.Patronymic"></li>
+        <li><input type="date" placeholder="@now_18" min="@now_100" max="@now_18" name="Employee.BirthDate" value="@birthDateValue"></li>
+        <li>
+            @{
+                var maleChecked = (Model.Employee.Sex == Sex.Male) ? "checked" : "";   
+                var femaleChecked = (Model.Employee.Sex == Sex.Female) ? "checked" : "";   
+            }
+            <input type="radio" name="Employee.Sex" value="Male" id="Male" @maleChecked><label for="Male">Male</label><br></input>
+            <input type="radio" name="Employee.Sex" value="Female" id="Female" @femaleChecked><label for="Female">Female</label><br></input>
+        </li>
+        <li>
+            <select name="Employee.PositionId">
+                <option value="@nullGuid" selected>---</option>
+                @foreach(var p in positions)
+                {
+                    @if(p.Id == Model.Employee.PositionId)
+                    {
+                        <option value="@p.Id" selected>@p.PositionName</option>
+                    }
+                    else
+                    {
+                        <option value="@p.Id">@p.PositionName</option>
+                    }
+                }
+            </select>
+        </li>
+        <li>
+            <select name="Employee.SubdivisionId">
+                <option value="@nullGuid" selected>---</option>
+                @foreach(var s in subdivisions)
+                {
+                    @if(s.Id == Model.Employee.SubdivisionId)
+                    {
+                        <option value="@s.Id" selected>@s.SubdivisionName</option>
+                    }
+                    else
+                    {
+                        <option value="@s.Id">@s.SubdivisionName</option>
+                    }
+                }
+            </select>
+        </li>
+        <li><input type="text" placeholder="[Surname Name Patronymic]" value="@managerFullName" id="managerName" onkeyup="updateManagerList()" onchange="updateManagerId()" list="Managers"></li>
+        <input type="hidden" value="" name="Employee.LineManagerId" id="managerId" />
+        <datalist id="Managers">
+        </datalist>
+        <script>
+            var managerNameToId = {};
+
+            function updateManagerId() {
+                var id = managerNameToId[document.getElementById("managerName").value];
+                document.getElementById("managerId").value = id == undefined ? '' : id;
+            }
+
+            function updateManagerList() {
+                var value = document.getElementById("managerName").value;
+                if (value != '')
+                {
+                    var req = new XMLHttpRequest();
+                    req.open('GET', '/Employee/SearchEmployeeByRequisites/?queryStr=' + value);
+                    req.send();
+                    req.onload = function() {
+                        if (req.status != 200)
+                            console.log(`Error ${req.status}: ${req.statusText}`);
+                        else
+                            processResponse(req.response);
+                    };
+                    req.onerror = function() { console.log("Error"); };
+                }
+            }
+
+            function processResponse(response) {
+                var parser = new DOMParser();
+                var xmlDoc = parser.parseFromString(response, "text/xml");
+                var empl = xmlDoc.getElementsByTagName("Employee");
+                var managersList = document.getElementById("Managers");
+                managersList.textContent = '';
+                managerNameToId = {};
+                for (var i = 0; i < empl.length; ++i) {
+                    var e = empl[i];
+                    var name = e.getElementsByTagName("FullName")[0].textContent;
+                    var id = e.getElementsByTagName("Id")[0].textContent
+                    managerNameToId[name] = id;
+
+                    var option = document.createElement('option');
+                    option.setAttribute('value', name);
+                    managersList.appendChild(option);
+                }
+                updateManagerId();
+            }
+        </script>
+    </ul>
+    <button type="submit">Save</button><a href="/" class="btn">Cancel</a>
+</form>
