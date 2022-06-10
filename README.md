@@ -39,10 +39,20 @@
 
 ### <a name="демо">Как с этим работать</a>
 1. Стартовая страница - это поиск. Можно искать сотрудников по ФИО, позиции и отделу. Результат поиска внизу страницы, выдается по 10 человек на страницу.<br />
+<br />
 ![alt text](https://github.com/marie-frostova/Deeplay_Test_Task/blob/master/Images/2.png?raw=true)
+<br />
+<br />
 2. Если нажать на кнопку "Add Employee", то попадем на страницу, где можно заполнить всю информацию о сотруднике. В поле ввода менеджера применяется технология ajax, которая позволяет пользователю получать возможные варианты для ввода не перезагружая страницу.<br />
+<br />
 ![alt text](https://github.com/marie-frostova/Deeplay_Test_Task/blob/master/Images/1.png?raw=true)
+<br />
+<br />
 3. Также если кликнуть на любого сотрудника, то можно увидеть всю информацию о нем. если у него есть подчиненные, то мы можем увидеть их в списке. Любого сотрудника можно редактировать или удалять.<br />
+<br />
 ![alt text](https://github.com/marie-frostova/Deeplay_Test_Task/blob/master/Images/3.png?raw=true)
+<br />
+<br />
 4. Еще можно добавлять и удалять позиции в списке всех позиций. Каждую позицию можно редактировать. То же самое касается отделов.<br />
+<br />
 ![alt text](https://github.com/marie-frostova/Deeplay_Test_Task/blob/master/Images/4.png?raw=true)
